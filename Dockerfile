@@ -62,9 +62,9 @@ RUN \
 #    systemctl start ombutel-dbsetup.service;
 
 # Enable the http access:
-RUN \
-    firewall-cmd --add-service=http;\
-    firewall-cmd --reload;
+#RUN \
+#    firewall-cmd --add-service=http;\
+#    firewall-cmd --reload;
        
 EXPOSE 3000/tcp 3005/tcp 
 
