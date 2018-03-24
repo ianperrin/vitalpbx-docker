@@ -49,12 +49,6 @@ RUN \
 RUN \
     sed -i 's/^hosts.*$/hosts:      myhostname files dns/' /etc/nsswitch.conf;
 
-RUN \
-    cat << EOF >> /etc/sysctl.d/10-ombutel.conf \
-    # Reboot machine automatically after 20 seconds if it kernel panics \
-    kernel.panic = 20 \
-    EOF;
-
 # Set permissions
 RUN \
     chown -R apache:root /etc/asterisk/ombutel;
