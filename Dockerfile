@@ -54,12 +54,12 @@ RUN \
     chown -R apache:root /etc/asterisk/ombutel;
 
 # Restart httpd
-RUN \
-    systemctl restart httpd;
+#RUN \
+#    systemctl restart httpd;
 
 #Start ombutel-dbsetup
-RUN \
-    systemctl start ombutel-dbsetup.service;
+#RUN \
+#    systemctl start ombutel-dbsetup.service;
 
 # Enable the http access:
 RUN \
