@@ -3,6 +3,24 @@ FROM centos/systemd
 ENV HOME /root
 WORKDIR $HOME
 
+#set -e
+
+##Disable Selinux Temporarily
+#SELINUX_STATUS=$(getenforce)
+#if [ "$SELINUX_STATUS" != "Disabled" ]; then
+#    echo "Disabling SELINUX Temporarily"
+#    setenforce 0
+#else
+#  echo "SELINUX it is already disabled"
+#fi
+
+##Disable SeLinux Permanently
+#sefile="/etc/selinux/config"
+#if [ -e $sefile ]
+#then
+#  sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+#fi
+
 #Install wget command
 RUN \
     yum install wget -y;
@@ -14,6 +32,7 @@ RUN \
 
 #Download the beta repo of VitalPBX
 RUN \
+    rm -rf /etc/yum.repos.d/vitalpbx.repo;\
     wget -P /etc/yum.repos.d/ https://raw.githubusercontent.com/VitalPBX/VPS/master/resources/vitalpbx.repo;
 
 #Install SSH Welcome Banner
@@ -24,13 +43,21 @@ RUN \
 
 #Intall other required dependencies
 RUN \
-    yum -y install epel-release php-5.4.16-42.el7;
+    yum -y install epel-release php;
 
 # Update the system & Clean Cache Again
 RUN \
     yum clean all;\
     rm -rf /var/cache/yum;\
     yum -y update;
+
+#Install MariaDB (MySQL)
+RUN \
+    yum install mariadb-server -y;\
+    systemctl enable mariadb;\
+    rm -rf /etc/my.cnf.d/ombutel.cnf;\
+    wget -P /etc/my.cnf.d/ https://raw.githubusercontent.com/VitalPBX/VPS/master/resources/ombutel.cnf;\
+    systemctl start mariadb;
 
 # Install VitalPBX pre-requisites
 RUN \
@@ -47,14 +74,18 @@ RUN \
 RUN \
     sed -i 's/^hosts.*$/hosts:      myhostname files dns/' /etc/nsswitch.conf;
 
+#cat << EOF >> /etc/sysctl.d/10-ombutel.conf
+## Reboot machine automatically after 20 seconds if it kernel panics
+#kernel.panic = 20
+#EOF
+
 # Set permissions
 RUN \
     chown -R apache:root /etc/asterisk/ombutel;
 
 # Restart httpd
 #RUN \
-#    systemctl restart httpd;
-
+#    systemctl restart httpd
 #Start ombutel-dbsetup
 #RUN \
 #    systemctl start ombutel-dbsetup.service;
