@@ -1,4 +1,4 @@
-FROM centos/systemd
+FROM centos:7
 
 ENV HOME /root
 WORKDIR $HOME
@@ -85,10 +85,11 @@ RUN \
 
 # Restart httpd
 #RUN \
-#    systemctl restart httpd
-#Start ombutel-dbsetup
+#    systemctl restart httpd;
+
+#Start vpbx-setup
 #RUN \
-#    systemctl start ombutel-dbsetup.service;
+#    systemctl start vpbx-setup.service;
 
 # Enable the http access:
 #RUN \
