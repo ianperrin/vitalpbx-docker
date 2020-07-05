@@ -73,18 +73,18 @@ RUN sed -i 's/^hosts.*$/hosts:      myhostname files dns/' /etc/nsswitch.conf
 RUN chown -R apache:root /etc/asterisk/ombutel
 
 # Restart httpd
-#RUN systemctl restart httpd
+RUN systemctl restart httpd
 
 #Start vpbx-setup
-#RUN systemctl start vpbx-setup.service
+RUN systemctl start vpbx-setup.service
 
 # Enable the http access:
-#RUN firewall-cmd --add-service=http
-#RUN firewall-cmd --reload
+RUN firewall-cmd --add-service=http
+RUN firewall-cmd --reload
 
 VOLUME /config
 VOLUME /var/lib/mysql
 
-EXPOSE 3000/tcp 3005/tcp 3306/tcp 9004/tcp
+EXPOSE 3000/tcp 3005/tcp 3306/tcp
 
 CMD ["/usr/sbin/init"]
